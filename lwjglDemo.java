@@ -4,6 +4,7 @@ import org.lwjgl.util.vector.Vector3f;
 
 import engine.InputHandler;
 import engine.Loader;
+import engine.MasterRenderer;
 import engine.OBJLoader;
 import engine.Renderer;
 import engine.Window;
@@ -51,37 +52,65 @@ public class lwjglDemo {
 		// Set the clear color
 		glClearColor(0.0f, 0.0f, 0.0f, 0.0f);
 		
-		StaticShader shader = new StaticShader();
-		Renderer.init(shader);
-		
+	
+		MasterRenderer.init();
 		 
 		RawModel model = OBJLoader.loadObjModel("dragon");
 		
 		
-		ModelTexture texture = new ModelTexture(Loader.loadTexture("white"));
-		TexturedModel staticModel = new TexturedModel(model, texture);
-		 
-		Entity entity = new Entity(staticModel, new Vector3f(0,0,-50), 0,0,0,1);
+		
+		TexturedModel staticModel = new TexturedModel(model, new ModelTexture(Loader.loadTexture("white")));
+		staticModel.getTexture().setShineDamper(10);
+		staticModel.getTexture().setReflectivity(3);
+		
+		
 		Light light = new Light(new Vector3f(0,0,-20), new Vector3f(1,0.2f,0.2f));
 		
+		Entity[] entities = new Entity[2];
+		for(int i = 0; i< entities.length; i++) {
+			entities[i] = new Entity(staticModel, new Vector3f(-2+i*6f,-5,-80), 0,0,0,1);
+		}
+		
+		
+		
 		Camera camera = new Camera();
+		
+		double previousTime = glfwGetTime();
+		int frameCount = 0;
+		
 		 
 		while ( !glfwWindowShouldClose(window) ) {
 			InputHandler.processInput(); 
 			
-			entity.increaseRotation(0,1,0);
+			
 			camera.move();
-			Renderer.prepare();
-			shader.start();
-			 
-			Renderer.render(entity, shader, camera, light);
-			shader.stop();
 			
+			for(int i = 0; i < entities.length; i++) {
+				entities[i].increaseRotation(0,1,0);
 			
+				MasterRenderer.processEntity(entities[i]);
+			}
+		
+			MasterRenderer.render(light, camera);
 			
+				
 			glfwSwapBuffers(window); // swap the color buffers
+			
+			
+			// Measure speed
+		    double currentTime = glfwGetTime();
+		    frameCount++;
+		    // If a second has passed.
+		    if ( currentTime - previousTime >= 1.0 )
+		    {
+		        // Display the frame count here any way you want.
+		        System.out.println(frameCount);
+
+		        frameCount = 0;
+		        previousTime = currentTime;
+		    }
 		}
-		shader.cleanUp();
+		MasterRenderer.cleanUp();
 		Loader.cleanUp();
 	}
 
