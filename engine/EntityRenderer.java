@@ -17,29 +17,17 @@ import shaders.StaticShader;
 import textures.ModelTexture;
 import toolbox.Maths;
 
-public class Renderer {
+public class EntityRenderer {
 	
-	private static final float FOV = 70;
-	private static final float NEAR_PLANE = 0.1f;
-	private static final float FAR_PLANE = 1000;
-	
-	private static Matrix4f projectionMatrix;
 	private static StaticShader shader;
 	
-	public static void init(StaticShader shader) {
-		Renderer.shader = shader;
-		glEnable(GL_CULL_FACE);
-		glCullFace(GL_BACK);
-		createProjectionMatrix();
+	public static void init(StaticShader shader, Matrix4f projectionMatrix) {
+		EntityRenderer.shader = shader;
 		shader.start();
 		shader.loadProjectionMatrix(projectionMatrix);
 		shader.stop();
 	}
 	
-	public static void prepare() {
-		glEnable(GL_DEPTH_TEST);
-		glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT); // clear the framebuffer
-	}
 	
 	public static void render(Map<TexturedModel, List<Entity>> entities) {
 		for(TexturedModel model:entities.keySet()) {
@@ -77,18 +65,5 @@ public class Renderer {
 		shader.loadTransformationMatrix(transformationMatrix);
 	}
 	
-	private static void createProjectionMatrix() {
-		float aspectRatio = (float)Window.width/(float)Window.height;
-		float y_scale = (float)((1f/Math.tan(Math.toRadians(FOV/2f)))*aspectRatio);
-		float x_scale = y_scale / aspectRatio;
-		float frustum_leanth = FAR_PLANE - NEAR_PLANE;
-		
-		projectionMatrix = new Matrix4f();
-		projectionMatrix.m00 = x_scale;
-		projectionMatrix.m11 = y_scale;
-		projectionMatrix.m22 = -((FAR_PLANE + NEAR_PLANE) /frustum_leanth);
-		projectionMatrix.m23 = -1;
-		projectionMatrix.m32 = -((2 * NEAR_PLANE * FAR_PLANE) / frustum_leanth);
-		projectionMatrix.m33 = 0;
-	}
+	
 }

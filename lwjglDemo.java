@@ -6,7 +6,6 @@ import engine.InputHandler;
 import engine.Loader;
 import engine.MasterRenderer;
 import engine.OBJLoader;
-import engine.Renderer;
 import engine.Window;
 import entities.Camera;
 import entities.Entity;
@@ -14,6 +13,7 @@ import entities.Light;
 import models.RawModel;
 import models.TexturedModel;
 import shaders.StaticShader;
+import terrains.Terrain;
 import textures.ModelTexture;
 
 import static org.lwjgl.glfw.GLFW.*;
@@ -64,14 +64,15 @@ public class lwjglDemo {
 		staticModel.getTexture().setReflectivity(3);
 		
 		
-		Light light = new Light(new Vector3f(0,0,-20), new Vector3f(1,0.2f,0.2f));
+		Light light = new Light(new Vector3f(3000,2000,2000), new Vector3f(1,1f,1f));
 		
-		Entity[] entities = new Entity[2];
+		Entity[] entities = new Entity[1];
 		for(int i = 0; i< entities.length; i++) {
 			entities[i] = new Entity(staticModel, new Vector3f(-2+i*6f,-5,-80), 0,0,0,1);
 		}
 		
-		
+		Terrain terrain = new Terrain(0,0, new ModelTexture(Loader.loadTexture("grass")));
+		Terrain terrain2 = new Terrain(1,0, new ModelTexture(Loader.loadTexture("grass")));
 		
 		Camera camera = new Camera();
 		
@@ -85,11 +86,17 @@ public class lwjglDemo {
 			
 			camera.move();
 			
+			MasterRenderer.processTerrain(terrain);
+			MasterRenderer.processTerrain(terrain2);
+			
 			for(int i = 0; i < entities.length; i++) {
 				entities[i].increaseRotation(0,1,0);
 			
 				MasterRenderer.processEntity(entities[i]);
 			}
+			
+			
+			
 		
 			MasterRenderer.render(light, camera);
 			

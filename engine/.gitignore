@@ -4,3 +4,5 @@
 /Renderer.class
 /Window.class
 /MasterRenderer.class
+/EntityRenderer.class
+/TerrainRenderer.class
