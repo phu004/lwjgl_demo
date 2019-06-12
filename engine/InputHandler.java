@@ -7,7 +7,7 @@ public class InputHandler {
 	public static char[] inputBuffer = new char[256];
 	public static char[] keyReleaseBuffer = new char[256];	
 	public static int inputCounter, inputBufferIndex, keyReleaseCounter, keyReleaseBufferIndex;
-	public static boolean leftKeyPressed, rightKeyPressed, upKeyPressed, downKeyPressed;
+	public static boolean leftKeyPressed, rightKeyPressed, upKeyPressed, downKeyPressed, moveUp, moveDown;
 	
 	public static void init(long window) {
 		glfwSetInputMode(window, GLFW_LOCK_KEY_MODS, GLFW_TRUE);
@@ -114,7 +114,12 @@ public class InputHandler {
 			if(c == 262) {
 				rightKeyPressed = true;
 			}
-			
+			if(c == 'a') {
+				moveUp = true;
+			}
+			if(c == 'z') {
+				moveDown = true;
+			}
 			
 			inputBufferIndex++;
 		}
@@ -140,7 +145,12 @@ public class InputHandler {
 			if(c == 262) {
 				rightKeyPressed = false;
 			}
-			
+			if(c == 'a') {
+				moveUp = false;
+			}
+			if(c == 'z') {
+				moveDown = false;
+			}
 			keyReleaseBufferIndex++;
 		}
 		

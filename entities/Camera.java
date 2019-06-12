@@ -6,7 +6,7 @@ import engine.InputHandler;
 
 public class Camera {
 
-	private Vector3f position = new Vector3f(100,10,100);
+	private Vector3f position = new Vector3f(100,5,0);
 	private float pitch;
 	private float yaw;
 	private float roll;
@@ -27,6 +27,12 @@ public class Camera {
 		}
 		if(InputHandler.downKeyPressed) {
 			position.z+=0.2f;
+		}
+		if(InputHandler.moveUp) {
+			position.y+=0.2f;
+		}
+		if(InputHandler.moveDown) {
+			position.y-=0.2f;
 		}
 		
 	}

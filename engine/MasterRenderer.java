@@ -1,13 +1,7 @@
 package engine;
 
-import static org.lwjgl.opengl.GL11.GL_BACK;
-import static org.lwjgl.opengl.GL11.GL_COLOR_BUFFER_BIT;
-import static org.lwjgl.opengl.GL11.GL_CULL_FACE;
-import static org.lwjgl.opengl.GL11.GL_DEPTH_BUFFER_BIT;
-import static org.lwjgl.opengl.GL11.GL_DEPTH_TEST;
-import static org.lwjgl.opengl.GL11.glClear;
-import static org.lwjgl.opengl.GL11.glCullFace;
-import static org.lwjgl.opengl.GL11.glEnable;
+
+import static org.lwjgl.opengl.GL46.*;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -39,13 +33,21 @@ public class MasterRenderer {
 	private static List<Terrain> terrains = new ArrayList<Terrain>();
 	
 	public static void init() {
-		glEnable(GL_CULL_FACE);
-		glCullFace(GL_BACK);
+		enableCulling();
 		createProjectionMatrix();
 		shader = new StaticShader();
 		terrainShader = new TerrainShader();
 		EntityRenderer.init(shader, projectionMatrix);
 		TerrainRenderer.init(terrainShader, projectionMatrix);
+	}
+	
+	public static void enableCulling() {
+		glEnable(GL_CULL_FACE);
+		glCullFace(GL_BACK);
+	}
+	
+	public static void disableCulling() {
+		glDisable(GL_CULL_FACE);
 	}
 	
 	public static void render(Light sun, Camera camera) {
@@ -87,6 +89,9 @@ public class MasterRenderer {
 	}
 	
 	public static void prepare() {
+		// Set the clear color
+		glClearColor(0.529f, 0.808f, 0.922f, 0.0f);
+		
 		glEnable(GL_DEPTH_TEST);
 		glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT); // clear the framebuffer
 	}

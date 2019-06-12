@@ -15,6 +15,7 @@ import models.TexturedModel;
 import shaders.StaticShader;
 import terrains.Terrain;
 import textures.ModelTexture;
+import java.util.Random;
 
 import static org.lwjgl.glfw.GLFW.*;
 import static org.lwjgl.opengl.GL11.*;
@@ -49,30 +50,33 @@ public class lwjglDemo {
 		// bindings available for use.
 		GL.createCapabilities();
 
-		// Set the clear color
-		glClearColor(0.0f, 0.0f, 0.0f, 0.0f);
+	
 		
 	
 		MasterRenderer.init();
 		 
-		RawModel model = OBJLoader.loadObjModel("dragon");
+		TexturedModel tree = new TexturedModel(OBJLoader.loadObjModel("tree"), new ModelTexture(Loader.loadTexture("tree")));
+		TexturedModel grass = new TexturedModel(OBJLoader.loadObjModel("grassModel"), new ModelTexture(Loader.loadTexture("grassTexture")));
+		TexturedModel fern = new TexturedModel(OBJLoader.loadObjModel("fern"), new ModelTexture(Loader.loadTexture("fern")));
 		
+		grass.getTexture().setHasTransparency(true);
+		grass.getTexture().setUseFakeLightning(true);
+		fern.getTexture().setHasTransparency(true);
 		
-		
-		TexturedModel staticModel = new TexturedModel(model, new ModelTexture(Loader.loadTexture("white")));
-		staticModel.getTexture().setShineDamper(10);
-		staticModel.getTexture().setReflectivity(3);
-		
-		
-		Light light = new Light(new Vector3f(3000,2000,2000), new Vector3f(1,1f,1f));
-		
-		Entity[] entities = new Entity[1];
-		for(int i = 0; i< entities.length; i++) {
-			entities[i] = new Entity(staticModel, new Vector3f(-2+i*6f,-5,-80), 0,0,0,1);
+		Entity[] entities = new Entity[1500];
+		Random random = new Random();
+		for(int i = 0; i < 1500; i+=3) {
+			entities[i] = new Entity(tree, new Vector3f(random.nextFloat()*800 -400, 0, random.nextFloat() * -600), 0,0,0,3);
+			entities[i+1] = new Entity(grass, new Vector3f(random.nextFloat()*800 -400, 0, random.nextFloat() * -600), 0,0,0,1);
+			entities[i+2] = new Entity(fern, new Vector3f(random.nextFloat()*800 -400, 0, random.nextFloat() * -600), 0,0,0,1);
 		}
 		
-		Terrain terrain = new Terrain(0,0, new ModelTexture(Loader.loadTexture("grass")));
-		Terrain terrain2 = new Terrain(1,0, new ModelTexture(Loader.loadTexture("grass")));
+		Light light = new Light(new Vector3f(3000,2000,2000), new Vector3f(1f,1f,1f));
+		
+		
+		
+		Terrain terrain = new Terrain(-1,-1, new ModelTexture(Loader.loadTexture("grass")));
+		Terrain terrain2 = new Terrain(0,-1, new ModelTexture(Loader.loadTexture("grass")));
 		
 		Camera camera = new Camera();
 		
@@ -90,11 +94,8 @@ public class lwjglDemo {
 			MasterRenderer.processTerrain(terrain2);
 			
 			for(int i = 0; i < entities.length; i++) {
-				entities[i].increaseRotation(0,1,0);
-			
 				MasterRenderer.processEntity(entities[i]);
 			}
-			
 			
 			
 		
@@ -111,7 +112,7 @@ public class lwjglDemo {
 		    if ( currentTime - previousTime >= 1.0 )
 		    {
 		        // Display the frame count here any way you want.
-		        System.out.println(frameCount);
+		        //System.out.println(frameCount);
 
 		        frameCount = 0;
 		        previousTime = currentTime;

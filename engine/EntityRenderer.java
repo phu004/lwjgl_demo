@@ -48,12 +48,17 @@ public class EntityRenderer {
 		glEnableVertexAttribArray(1);
 		glEnableVertexAttribArray(2);
 		ModelTexture texture = model.getTexture();
+		if(texture.isHasTransparency()) {
+			MasterRenderer.disableCulling();
+		}
+		shader.loadFakeLightingVariable(texture.isUseFakeLightning());
 		shader.loadShineVariable(texture.getShineDamper(), texture.getReflectivity());
 		glActiveTexture(GL_TEXTURE0);
 		glBindTexture(GL_TEXTURE_2D, texture.getID());
 	}
 	
 	private static void unbindTexturedModel() {
+		MasterRenderer.enableCulling();
 		glDisableVertexAttribArray(0);
 		glDisableVertexAttribArray(1);
 		glDisableVertexAttribArray(2);
