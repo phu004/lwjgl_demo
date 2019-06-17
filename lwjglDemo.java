@@ -12,9 +12,14 @@ import entities.Entity;
 import entities.Light;
 import models.RawModel;
 import models.TexturedModel;
+import objConverter.ModelData;
+import objConverter.OBJFileLoader;
 import shaders.StaticShader;
 import terrains.Terrain;
 import textures.ModelTexture;
+import textures.TerrainTexture;
+import textures.TerrainTexturePack;
+
 import java.util.Random;
 
 import static org.lwjgl.glfw.GLFW.*;
@@ -54,7 +59,7 @@ public class lwjglDemo {
 		
 	
 		MasterRenderer.init();
-		 
+			
 		TexturedModel tree = new TexturedModel(OBJLoader.loadObjModel("tree"), new ModelTexture(Loader.loadTexture("tree")));
 		TexturedModel grass = new TexturedModel(OBJLoader.loadObjModel("grassModel"), new ModelTexture(Loader.loadTexture("grassTexture")));
 		TexturedModel fern = new TexturedModel(OBJLoader.loadObjModel("fern"), new ModelTexture(Loader.loadTexture("fern")));
@@ -74,9 +79,17 @@ public class lwjglDemo {
 		Light light = new Light(new Vector3f(3000,2000,2000), new Vector3f(1f,1f,1f));
 		
 		
+		TerrainTexture backgroundTexture = new TerrainTexture(Loader.loadTexture("grassy2"));
+		TerrainTexture rTexture = new TerrainTexture(Loader.loadTexture("mud"));
+		TerrainTexture gTexture = new TerrainTexture(Loader.loadTexture("grassFlowers"));
+		TerrainTexture bTexture = new TerrainTexture(Loader.loadTexture("path"));
 		
-		Terrain terrain = new Terrain(-1,-1, new ModelTexture(Loader.loadTexture("grass")));
-		Terrain terrain2 = new Terrain(0,-1, new ModelTexture(Loader.loadTexture("grass")));
+		TerrainTexturePack texturePack = new TerrainTexturePack(backgroundTexture, rTexture, gTexture, bTexture);
+		TerrainTexture blendMap = new TerrainTexture(Loader.loadTexture("blendMap"));
+		
+		
+		Terrain terrain = new Terrain(-1,-1, texturePack, blendMap);
+		Terrain terrain2 = new Terrain(0,-1, texturePack, blendMap);
 		
 		Camera camera = new Camera();
 		
