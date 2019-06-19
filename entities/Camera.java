@@ -3,6 +3,7 @@ package entities;
 import org.lwjgl.util.vector.Vector3f;
 
 import engine.InputHandler;
+import engine.Window;
 
 public class Camera {
 
@@ -11,29 +12,50 @@ public class Camera {
 	private float yaw;
 	private float roll;
 	
+	private static final float TURN_SPEED = 60;
+	private static final float MOVE_SPEED = 20;
+	
+	private float currentSpeed = 0;
+	private float currentTurnSpeed = 0;
+	
 	public Camera() {
 		
 	}
 
 	public void move() {
 		if(InputHandler.upKeyPressed) {
-			position.z-=0.2f;
+			currentSpeed = MOVE_SPEED;
+		}else if(InputHandler.downKeyPressed) {
+			currentSpeed = -MOVE_SPEED;
+		}else {
+			currentSpeed = 0;
 		}
+		
 		if(InputHandler.rightKeyPressed) {
-			position.x+=0.2f;
+			currentTurnSpeed = TURN_SPEED;
+		}else if(InputHandler.leftKeyPressed) {
+			currentTurnSpeed = -TURN_SPEED;
+		}else {
+			currentTurnSpeed = 0;
 		}
-		if(InputHandler.leftKeyPressed) {
-			position.x-=0.2f;
-		}
-		if(InputHandler.downKeyPressed) {
-			position.z+=0.2f;
-		}
+		
+		float frameTimeSeconds = Window.getFrameTimeSeconds();
+		
 		if(InputHandler.moveUp) {
-			position.y+=0.2f;
+			position.y+=5f*frameTimeSeconds;
 		}
 		if(InputHandler.moveDown) {
-			position.y-=0.2f;
+			position.y-=5f*frameTimeSeconds;
 		}
+		
+		
+		
+		yaw+=currentTurnSpeed*frameTimeSeconds;
+		
+		position.x+= currentSpeed*frameTimeSeconds*Math.sin(Math.toRadians(yaw));
+		position.z-= currentSpeed*frameTimeSeconds*Math.cos(Math.toRadians(yaw));
+		
+		
 		
 	}
 	

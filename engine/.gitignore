@@ -6,3 +6,6 @@
 /MasterRenderer.class
 /EntityRenderer.class
 /TerrainRenderer.class
+/Sync.class
+/Sync$1.class
+/Sync$RunningAvg.class

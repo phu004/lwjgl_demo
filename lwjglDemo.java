@@ -92,10 +92,6 @@ public class lwjglDemo {
 		Terrain terrain2 = new Terrain(0,-1, texturePack, blendMap);
 		
 		Camera camera = new Camera();
-		
-		double previousTime = glfwGetTime();
-		int frameCount = 0;
-		
 		 
 		while ( !glfwWindowShouldClose(window) ) {
 			InputHandler.processInput(); 
@@ -111,26 +107,14 @@ public class lwjglDemo {
 			}
 			
 			
-		
 			MasterRenderer.render(light, camera);
 			
-				
-			glfwSwapBuffers(window); // swap the color buffers
+			
+			Window.updateDisplay(window);
 			
 			
-			// Measure speed
-		    double currentTime = glfwGetTime();
-		    frameCount++;
-		    // If a second has passed.
-		    if ( currentTime - previousTime >= 1.0 )
-		    {
-		        // Display the frame count here any way you want.
-		        //System.out.println(frameCount);
-
-		        frameCount = 0;
-		        previousTime = currentTime;
-		    }
 		}
+		
 		MasterRenderer.cleanUp();
 		Loader.cleanUp();
 	}

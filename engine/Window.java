@@ -9,6 +9,7 @@ import static org.lwjgl.glfw.GLFW.glfwCreateWindow;
 import static org.lwjgl.glfw.GLFW.glfwDefaultWindowHints;
 import static org.lwjgl.glfw.GLFW.glfwDestroyWindow;
 import static org.lwjgl.glfw.GLFW.glfwGetPrimaryMonitor;
+import static org.lwjgl.glfw.GLFW.glfwGetTime;
 import static org.lwjgl.glfw.GLFW.glfwGetVideoMode;
 import static org.lwjgl.glfw.GLFW.glfwGetWindowSize;
 import static org.lwjgl.glfw.GLFW.glfwInit;
@@ -16,11 +17,13 @@ import static org.lwjgl.glfw.GLFW.glfwMakeContextCurrent;
 import static org.lwjgl.glfw.GLFW.glfwSetErrorCallback;
 import static org.lwjgl.glfw.GLFW.glfwSetWindowPos;
 import static org.lwjgl.glfw.GLFW.glfwShowWindow;
+import static org.lwjgl.glfw.GLFW.glfwSwapBuffers;
 import static org.lwjgl.glfw.GLFW.glfwSwapInterval;
 import static org.lwjgl.glfw.GLFW.glfwTerminate;
 import static org.lwjgl.glfw.GLFW.glfwWindowHint;
 import static org.lwjgl.system.MemoryStack.stackPush;
 import static org.lwjgl.system.MemoryUtil.NULL;
+
 
 import java.nio.IntBuffer;
 
@@ -30,8 +33,14 @@ import org.lwjgl.system.MemoryStack;
 
 public class Window {
 	
-	public static int width;
-	public static int height;
+	private static int width;
+	private static int height;
+	private static int FPS_CAP = 60;
+	
+	private static double lastFrameTime;
+	private static float delta;
+	
+	double previousTime = glfwGetTime();
 	
 	public static long init(int width, int height) {
 		Window.width = width;
@@ -82,8 +91,27 @@ public class Window {
 		// Make the window visible
 		glfwShowWindow(window);
 		
-		return window;
+		lastFrameTime = getCurrentTime();
 		
+		return window;
+	}
+	
+	public static void updateDisplay(long window) {
+		Sync.sync(FPS_CAP);  //cap frame rates
+		
+		glfwSwapBuffers(window); // swap the color buffers
+		
+		double currentFrameTime =  getCurrentTime();
+		delta = (float)(currentFrameTime - lastFrameTime);
+		lastFrameTime = currentFrameTime;
+	}
+	
+	public static float getFrameTimeSeconds() {
+		return delta;
+	}
+	
+	private static double getCurrentTime() {
+		return glfwGetTime();
 	}
 	
 	public static void destory(long window) {
@@ -95,5 +123,15 @@ public class Window {
 		glfwTerminate();
 		glfwSetErrorCallback(null).free();
 	}
+
+	public static int getWidth() {
+		return width;
+	}
+
+	public static int getHeight() {
+		return height;
+	}
+	
+	
 
 }
