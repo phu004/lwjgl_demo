@@ -7,7 +7,8 @@ public class InputHandler {
 	public static char[] inputBuffer = new char[256];
 	public static char[] keyReleaseBuffer = new char[256];	
 	public static int inputCounter, inputBufferIndex, keyReleaseCounter, keyReleaseBufferIndex;
-	public static boolean leftKeyPressed, rightKeyPressed, upKeyPressed, downKeyPressed, moveUp, moveDown;
+	public static boolean leftKeyPressed, rightKeyPressed, upKeyPressed, downKeyPressed, moveUp, moveDown, scrollUp, scrollDown;
+	public static float yScrollOffset;
 	
 	public static void init(long window) {
 		glfwSetInputMode(window, GLFW_LOCK_KEY_MODS, GLFW_TRUE);
@@ -24,6 +25,10 @@ public class InputHandler {
 				handleKeyRelease(getASCII(key, mods));
 			}
 			
+		});
+		
+		glfwSetScrollCallback(window, (myWindow, xoffset, yoffset) ->{
+			yScrollOffset = (float)yoffset;
 		});
 	}
 	
@@ -157,6 +162,22 @@ public class InputHandler {
 		//clear key release buffer
 		keyReleaseBufferIndex = 0;
 		keyReleaseCounter = 0;
+		
+		
+		if(yScrollOffset!=0) {
+			if(yScrollOffset > 0)
+				scrollUp = true;
+			if(yScrollOffset < 0)
+				scrollDown = true;
+			yScrollOffset = 0;
+		}else {
+			scrollUp = false;
+			scrollDown = false;
+		}
+		
+		//reset scroll offset
+		if(yScrollOffset !=0)
+			yScrollOffset = 0;
 		
 		
 	}

@@ -76,7 +76,7 @@ public class lwjglDemo {
 			entities[i+2] = new Entity(fern, new Vector3f(random.nextFloat()*800 -400, 0, random.nextFloat() * -600), 0,0,0,1);
 		}
 		
-		Light light = new Light(new Vector3f(3000,2000,2000), new Vector3f(1f,1f,1f));
+		Light light = new Light(new Vector3f(3000,6000,2000), new Vector3f(1f,1f,1f));
 		
 		
 		TerrainTexture backgroundTexture = new TerrainTexture(Loader.loadTexture("grassy2"));

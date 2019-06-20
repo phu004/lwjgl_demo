@@ -7,8 +7,9 @@ import engine.Window;
 
 public class Camera {
 
-	private Vector3f position = new Vector3f(100,5,0);
-	private float pitch;
+	private Vector3f position = new Vector3f(100,15,-100);
+	private Vector3f centerPosition = new Vector3f(position.x, position.y, position.z);
+	private float pitch = 45;
 	private float yaw;
 	private float roll;
 	
@@ -17,6 +18,9 @@ public class Camera {
 	
 	private float currentSpeed = 0;
 	private float currentTurnSpeed = 0;
+	
+	private float distanceFromMiddle = 50;
+	
 	
 	public Camera() {
 		
@@ -42,19 +46,21 @@ public class Camera {
 		float frameTimeSeconds = Window.getFrameTimeSeconds();
 		
 		if(InputHandler.moveUp) {
-			position.y+=5f*frameTimeSeconds;
+			centerPosition.y+=5f*frameTimeSeconds;
 		}
 		if(InputHandler.moveDown) {
-			position.y-=5f*frameTimeSeconds;
+			centerPosition.y-=5f*frameTimeSeconds;
 		}
-		
-		
 		
 		yaw+=currentTurnSpeed*frameTimeSeconds;
 		
-		position.x+= currentSpeed*frameTimeSeconds*Math.sin(Math.toRadians(yaw));
-		position.z-= currentSpeed*frameTimeSeconds*Math.cos(Math.toRadians(yaw));
+		centerPosition.x+= currentSpeed*frameTimeSeconds*Math.sin(Math.toRadians(yaw));
+		centerPosition.z-= currentSpeed*frameTimeSeconds*Math.cos(Math.toRadians(yaw));
 		
+		calculateZoom();
+		float horizontalDistance = calculateHorizontalDistance();
+		float verticalDistance = calculateVerticalDistance();
+		calculateCameraPosition(horizontalDistance,verticalDistance);
 		
 		
 	}
@@ -73,6 +79,31 @@ public class Camera {
 
 	public float getRoll() {
 		return roll;
+	}
+	
+	private void calculateZoom() {
+		float zoomLevel = 0;
+		
+		if(InputHandler.scrollUp)
+			zoomLevel = 2.5f;
+		if(InputHandler.scrollDown)
+			zoomLevel = -2.5f;
+		distanceFromMiddle -=zoomLevel;
+	}
+	
+	private float calculateHorizontalDistance() {
+		return (float)(distanceFromMiddle * Math.cos(Math.toDegrees(pitch)));
+	}
+	
+	private float calculateVerticalDistance() {
+		return (float)(distanceFromMiddle * Math.sin(Math.toDegrees(pitch)));
+	}
+	
+	private void calculateCameraPosition(float horizDistance, float verticDistance) {
+		position.set(centerPosition);
+		position.y = position.y + verticDistance;
+		position.x+= horizDistance*Math.sin(Math.toRadians(yaw));
+		position.z-= horizDistance*Math.cos(Math.toRadians(yaw));
 	}
 	
 }
