@@ -60,24 +60,13 @@ public class lwjglDemo {
 	
 		MasterRenderer.init();
 			
-		TexturedModel tree = new TexturedModel(OBJLoader.loadObjModel("tree"), new ModelTexture(Loader.loadTexture("tree")));
+		TexturedModel tree = new TexturedModel(OBJLoader.loadObjModel("lowPolyTree"), new ModelTexture(Loader.loadTexture("lowPolyTree")));
 		TexturedModel grass = new TexturedModel(OBJLoader.loadObjModel("grassModel"), new ModelTexture(Loader.loadTexture("grassTexture")));
 		TexturedModel fern = new TexturedModel(OBJLoader.loadObjModel("fern"), new ModelTexture(Loader.loadTexture("fern")));
 		
 		grass.getTexture().setHasTransparency(true);
 		grass.getTexture().setUseFakeLightning(true);
 		fern.getTexture().setHasTransparency(true);
-		
-		Entity[] entities = new Entity[1500];
-		Random random = new Random();
-		for(int i = 0; i < 1500; i+=3) {
-			entities[i] = new Entity(tree, new Vector3f(random.nextFloat()*800 -400, 0, random.nextFloat() * -600), 0,0,0,3);
-			entities[i+1] = new Entity(grass, new Vector3f(random.nextFloat()*800 -400, 0, random.nextFloat() * -600), 0,0,0,1);
-			entities[i+2] = new Entity(fern, new Vector3f(random.nextFloat()*800 -400, 0, random.nextFloat() * -600), 0,0,0,1);
-		}
-		
-		Light light = new Light(new Vector3f(3000,6000,2000), new Vector3f(1f,1f,1f));
-		
 		
 		TerrainTexture backgroundTexture = new TerrainTexture(Loader.loadTexture("grassy2"));
 		TerrainTexture rTexture = new TerrainTexture(Loader.loadTexture("mud"));
@@ -88,8 +77,25 @@ public class lwjglDemo {
 		TerrainTexture blendMap = new TerrainTexture(Loader.loadTexture("blendMap"));
 		
 		
-		Terrain terrain = new Terrain(-1,-1, texturePack, blendMap);
-		Terrain terrain2 = new Terrain(0,-1, texturePack, blendMap);
+		Terrain terrain = new Terrain(-1,-1, texturePack, blendMap, "heightmap");
+		Terrain terrain2 = new Terrain(0,-1, texturePack, blendMap, "heightmap");
+		
+		
+		Entity[] entities = new Entity[1500];
+		Random random = new Random();
+		for(int i = 0; i < 1500; i+=3) {
+			entities[i] = new Entity(tree, 0.6f);
+			entities[i].adjustPosition(terrain, terrain2);
+			entities[i+1] = new Entity(grass, 1);
+			entities[i + 1].adjustPosition(terrain, terrain2);
+			entities[i+2] = new Entity(fern, 1);
+			entities[i + 2].adjustPosition(terrain, terrain2);
+		}
+		
+		Light light = new Light(new Vector3f(3000,6000,2000), new Vector3f(1f,1f,1f));
+		
+		
+	
 		
 		Camera camera = new Camera();
 		 

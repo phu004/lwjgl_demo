@@ -75,7 +75,8 @@ public class Loader {
 
 	    // Generate Mip Map
 	    glGenerateMipmap(GL_TEXTURE_2D);
-	    
+	    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR_MIPMAP_LINEAR);
+	    glTexParameterf(GL_TEXTURE_2D, GL_TEXTURE_LOD_BIAS, -1.2f);
 		
 		textures.add(textureID);
 		return textureID;

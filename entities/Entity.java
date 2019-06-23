@@ -1,8 +1,11 @@
 package entities;
 
+import java.util.Random;
+
 import org.lwjgl.util.vector.Vector3f;
 
 import models.TexturedModel;
+import terrains.Terrain;
 
 public class Entity {
 	
@@ -13,7 +16,6 @@ public class Entity {
 	private float scale;
 	
 	public Entity(TexturedModel model, Vector3f position, float rotX, float rotY, float rotZ, float scale) {
-		
 		this.model = model;
 		this.position = position;
 		this.rotX = rotX;
@@ -21,6 +23,27 @@ public class Entity {
 		this.rotZ = rotZ;
 		this.scale = scale;
 	}
+	
+	public Entity(TexturedModel model,  float scale) {
+		Random random = new Random();
+		this.model = model;
+		this.position = new Vector3f(random.nextFloat()*800 -400, 0, random.nextFloat() * -600);
+		this.rotX = 0;
+		this.rotY = random.nextFloat()*360;
+		this.rotZ =0;
+		this.scale = scale;
+	}
+	
+	public void adjustPosition(Terrain terrain1, Terrain terrain2) {
+		if(terrain1.getHeightOfTerrain(position.x, position.z) != 0) {
+			position.y = terrain1.getHeightOfTerrain(position.x, position.z);
+		}else if(terrain2.getHeightOfTerrain(position.x, position.z) != 0) {
+			position.y = terrain2.getHeightOfTerrain(position.x, position.z);
+		}
+	}
+	
+	
+	
 	public void increasePosition(float dx, float dy, float dz) {
 		this.position.x+=dx;
 		this.position.y+=dy;

@@ -7,7 +7,7 @@ import engine.Window;
 
 public class Camera {
 
-	private Vector3f position = new Vector3f(100,15,-100);
+	private Vector3f position = new Vector3f(100,40,-100);
 	private Vector3f centerPosition = new Vector3f(position.x, position.y, position.z);
 	private float pitch = 45;
 	private float yaw;
@@ -92,18 +92,18 @@ public class Camera {
 	}
 	
 	private float calculateHorizontalDistance() {
-		return (float)(distanceFromMiddle * Math.cos(Math.toDegrees(pitch)));
+		return (float)(distanceFromMiddle * Math.cos(Math.toRadians(pitch)));
 	}
 	
 	private float calculateVerticalDistance() {
-		return (float)(distanceFromMiddle * Math.sin(Math.toDegrees(pitch)));
+		return (float)(distanceFromMiddle * Math.sin(Math.toRadians(pitch)));
 	}
 	
 	private void calculateCameraPosition(float horizDistance, float verticDistance) {
 		position.set(centerPosition);
 		position.y = position.y + verticDistance;
-		position.x+= horizDistance*Math.sin(Math.toRadians(yaw));
-		position.z-= horizDistance*Math.cos(Math.toRadians(yaw));
+		position.x-= horizDistance*Math.sin(Math.toRadians(yaw));
+		position.z+= horizDistance*Math.cos(Math.toRadians(yaw));
 	}
 	
 }
