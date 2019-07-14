@@ -54,18 +54,18 @@ public class MasterRenderer {
 		glDisable(GL_CULL_FACE);
 	}
 	
-	public static void render(Light sun, Camera camera) {
+	public static void render(List<Light> lights, Camera camera) {
 		prepare();
 		shader.start();
 		shader.loadSkyColour(RED, GREEN, BLUE);
-		shader.loadLight(sun);
+		shader.loadLights(lights);
 		shader.loadViewMatrix(camera);
 		EntityRenderer.render(entities);
 		shader.stop();
 		
 		terrainShader.start();
 		terrainShader.loadSkyColour(RED, GREEN, BLUE);
-		terrainShader.loadLight(sun);
+		terrainShader.loadLights(lights);
 		terrainShader.loadViewMatrix(camera);
 		TerrainRenderer.render(terrains);
 		terrainShader.stop();

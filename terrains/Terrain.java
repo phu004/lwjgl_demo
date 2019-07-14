@@ -18,7 +18,7 @@ import toolbox.Maths;
 
 public class Terrain {
 	private static final float SIZE = 800;
-	private static final float MAX_HEIGHT = 50;
+	private static final float MAX_HEIGHT = 50f;
 	private static final float MAX_PIXEL_COLOUR = 256*256*256;
 	
 	private float x;
@@ -75,7 +75,7 @@ public class Terrain {
 		int gridX = (int)(Math.floor(terrainX / gridSquareSize));
 		int gridZ = (int)(Math.floor(terrainZ / gridSquareSize));
 		if(gridX >= heights.length -1 || gridZ >= heights.length -1 || gridX < 0 || gridZ < 0) {
-			return 0;
+			return -9999999;
 		}
 		float xCoord = (terrainX % gridSquareSize)/gridSquareSize;
 		float zCoord = (terrainZ % gridSquareSize)/gridSquareSize;

@@ -63,15 +63,17 @@ public class lwjglDemo {
 	
 		MasterRenderer.init();
 			
-		TexturedModel tree = new TexturedModel(OBJLoader.loadObjModel("lowPolyTree"), new ModelTexture(Loader.loadTexture("lowPolyTree")));
+		TexturedModel tree = new TexturedModel(OBJLoader.loadObjModel("pine"), new ModelTexture(Loader.loadTexture("pine")));
 		TexturedModel grass = new TexturedModel(OBJLoader.loadObjModel("grassModel"), new ModelTexture(Loader.loadTexture("grassTexture")));
 		TexturedModel fern = new TexturedModel(OBJLoader.loadObjModel("fern"), new ModelTexture(Loader.loadTexture("fern")));
+		TexturedModel lamp = new TexturedModel(OBJLoader.loadObjModel("lamp"), new ModelTexture(Loader.loadTexture("lamp")));
 		
 		grass.getTexture().setHasTransparency(true);
 		grass.getTexture().setUseFakeLightning(true);
 		grass.getTexture().setNumberOfRows(4);
 		fern.getTexture().setHasTransparency(true);
 		fern.getTexture().setNumberOfRows(2);
+		lamp.getTexture().setUseFakeLightning(true);
 		
 		TerrainTexture backgroundTexture = new TerrainTexture(Loader.loadTexture("grassy2"));
 		TerrainTexture rTexture = new TerrainTexture(Loader.loadTexture("mud"));
@@ -86,10 +88,10 @@ public class lwjglDemo {
 		Terrain terrain2 = new Terrain(0,-1, texturePack, blendMap, "heightmap");
 		
 		
-		Entity[] entities = new Entity[1500];
+		Entity[] entities = new Entity[1503];
 		Random random = new Random();
 		for(int i = 0; i < 1500; i+=3) {
-			entities[i] = new Entity(tree, 0.6f);
+			entities[i] = new Entity(tree, 1.2f);
 			entities[i].adjustPosition(terrain, terrain2);
 			entities[i+1] = new Entity(grass, random.nextInt(9),1);
 			entities[i + 1].adjustPosition(terrain, terrain2);
@@ -97,7 +99,25 @@ public class lwjglDemo {
 			entities[i + 2].adjustPosition(terrain, terrain2);
 		}
 		
-		Light light = new Light(new Vector3f(3000,6000,2000), new Vector3f(1f,1f,1f));		
+		entities[1500] = new Entity(lamp, new Vector3f(150,10,-183), 1);
+		entities[1500].adjustPosition(terrain, terrain2);
+		entities[1501] = new Entity(lamp, new Vector3f(335,17,-190), 1);
+		entities[1501].adjustPosition(terrain, terrain2);
+		entities[1502] = new Entity(lamp, new Vector3f(238,7,-195), 1);
+		entities[1502].adjustPosition(terrain, terrain2);
+		
+		
+		
+		
+		List<Light> lights = new ArrayList<Light>();
+		lights.add(new Light(new Vector3f(0,1000,-7000), new Vector3f(0.4f,0.4f, 0.4f)));
+		lights.add(new Light(new Vector3f(150,10,-183), new Vector3f(2,0,0), new Vector3f(1,0.01f,0.002f)));
+		lights.add(new Light(new Vector3f(335,17,-190), new Vector3f(0,2,0), new Vector3f(1,0.01f,0.002f)));
+		lights.add(new Light(new Vector3f(238,7,-195), new Vector3f(2,2,0), new Vector3f(1,0.01f,0.002f)));
+		
+		lights.forEach((light) -> light.adjustPositionBasedOnTerrain(terrain, terrain2, 13.0f));
+	
+		
 		Camera camera = new Camera();
 		
 		while ( !glfwWindowShouldClose(window) ) {
@@ -112,7 +132,7 @@ public class lwjglDemo {
 				MasterRenderer.processEntity(entities[i]);
 			}
 			
-			MasterRenderer.render(light, camera);
+			MasterRenderer.render(lights, camera);
 			Window.updateDisplay(window);
 			
 		}

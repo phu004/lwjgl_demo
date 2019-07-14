@@ -26,6 +26,15 @@ public class Entity {
 		this.scale = scale;
 	}
 	
+	public Entity(TexturedModel model, Vector3f position,  float scale) {
+		this.model = model;
+		this.position = position;
+		this.rotX = 0;
+		this.rotY = 0;
+		this.rotZ = 0;
+		this.scale = scale;
+	}
+	
 	public Entity(TexturedModel model, int textureIndex, Vector3f position, float rotX, float rotY, float rotZ, float scale) {
 		this.model = model;
 		this.position = position;
@@ -68,9 +77,9 @@ public class Entity {
 	}
 	
 	public void adjustPosition(Terrain terrain1, Terrain terrain2) {
-		if(terrain1.getHeightOfTerrain(position.x, position.z) != 0) {
+		if(terrain1.getHeightOfTerrain(position.x, position.z) != -9999999) {
 			position.y = terrain1.getHeightOfTerrain(position.x, position.z);
-		}else if(terrain2.getHeightOfTerrain(position.x, position.z) != 0) {
+		}else if(terrain2.getHeightOfTerrain(position.x, position.z) != -9999999) {
 			position.y = terrain2.getHeightOfTerrain(position.x, position.z);
 		}
 	}
